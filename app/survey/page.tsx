@@ -50,10 +50,29 @@ const SCALE = [0, 1, 2, 3, 4];
 // Flatten for navigation; keep track of domain mapping
 const FLAT_ITEMS = PERMA_ITEMS.flatMap((d) => d.items.map((it) => ({ ...it, domain: d.domain })));
 
+// Content mapping for daily tasks based on dosage
+const DAILY_TASK_CONTENT = {
+  Rest: {
+    title: "Grounding",
+    task: "Touch a textured object for 60 seconds.",
+  },
+  Grow: {
+    title: "Reflection",
+    task: "Write down one thing you are tolerating today.",
+  },
+  Challenge: {
+    title: "Action",
+    task: "Send that one email you have been avoiding.",
+  },
+} as const;
+
+type Dosage = keyof typeof DAILY_TASK_CONTENT;
+
 export default function SurveyPage() {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, Answer>>(Object.fromEntries(FLAT_ITEMS.map((it) => [it.id, null])));
   const [submitted, setSubmitted] = useState(false);
+  const [selectedDosage, setSelectedDosage] = useState<Dosage>("Grow");
 
   const setAnswer = (id: string, value: number) => {
     setAnswers((s) => ({ ...s, [id]: value }));
@@ -165,6 +184,31 @@ export default function SurveyPage() {
                 <button className="primary" onClick={() => alert(JSON.stringify({ totalScore, pct, domainScores }, null, 2))} style={{marginLeft:10}}>Export</button>
               </div>
             </div>
+
+            <div className="result-card" style={{marginTop:20}}>
+              <h3 style={{margin:0,fontSize:18,marginBottom:16}}>Daily Task</h3>
+              <div style={{display:'flex',gap:8,justifyContent:'center',marginBottom:20}}>
+                {(Object.keys(DAILY_TASK_CONTENT) as Dosage[]).map((dosage) => (
+                  <button
+                    key={dosage}
+                    className={selectedDosage === dosage ? "primary" : "ghost"}
+                    onClick={() => setSelectedDosage(dosage)}
+                    style={{flex:1,maxWidth:140}}
+                  >
+                    {dosage}
+                  </button>
+                ))}
+              </div>
+              <div style={{textAlign:'left',padding:'16px 20px',background:'rgba(255,255,255,0.02)',borderRadius:10}}>
+                <h4 style={{margin:0,fontSize:16,color:'var(--accent)',marginBottom:8}}>
+                  {DAILY_TASK_CONTENT[selectedDosage].title}
+                </h4>
+                <p style={{margin:0,color:'var(--muted)',fontSize:14}}>
+                  {DAILY_TASK_CONTENT[selectedDosage].task}
+                </p>
+              </div>
+            </div>
+
             <div className="detail-note">This prototype shows PERMA domains with paraphrased placeholders. Replace with licensed PERMA-Profiler items for production use.</div>
           </main>
         )}
