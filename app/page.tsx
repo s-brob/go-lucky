@@ -15,7 +15,7 @@ export default function Home() {
 
   return (
     <div className="home-root">
-      <div className="spatial-scene" aria-hidden>
+      <div className="spatial-scene" aria-hidden="true">
         <div className="orb orb--a" />
         <div className="orb orb--b" />
         <div className="orb orb--c" />
