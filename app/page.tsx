@@ -80,13 +80,24 @@ export default function Home() {
       {isListening && (
         <div
           onClick={() => setIsListening(false)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setIsListening(false);
+          }}
+          tabIndex={0}
           className="fixed inset-0 backdrop-blur-md bg-stone-900/60 flex items-center justify-center cursor-pointer"
           aria-label="Voice Sanctuary Overlay"
+          role="dialog"
+          aria-modal="true"
         >
-          <div className="flex flex-col items-center gap-6">
+          <div 
+            className="flex flex-col items-center gap-6"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Breathing Circle Animation */}
             <div
               className="h-32 w-32 rounded-full bg-white"
+              role="img"
+              aria-label="Breathing animation indicating active listening"
               style={{
                 animation: "breathe 3s ease-in-out infinite"
               }}
