@@ -103,31 +103,14 @@ export default function Home() {
           >
             {/* Breathing Circle Animation */}
             <div
-              className="h-32 w-32 rounded-full bg-white"
+              className="h-32 w-32 rounded-full bg-white animate-pulse"
               aria-hidden="true"
-              style={{
-                animation: "breathe 3s ease-in-out infinite"
-              }}
             />
             {/* Listening Text */}
             <p className="text-white text-2xl font-light">I&apos;m listening...</p>
           </div>
         </div>
       )}
-
-      {/* Breathing Animation Keyframes */}
-      <style jsx>{`
-        @keyframes breathe {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.8;
-          }
-          50% {
-            transform: scale(1.2);
-            opacity: 1;
-          }
-        }
-      `}</style>
     </div>
   );
 }
