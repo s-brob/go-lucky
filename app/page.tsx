@@ -1,6 +1,19 @@
+"use client";
+
 import Image from "next/image";
+import { useState, useEffect, useRef } from "react";
+import { Mic } from "lucide-react";
 
 export default function Home() {
+  const [isListening, setIsListening] = useState(false);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isListening && overlayRef.current) {
+      overlayRef.current.focus();
+    }
+  }, [isListening]);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -60,6 +73,44 @@ export default function Home() {
           </a>
         </div>
       </main>
+
+      {/* Floating Action Button (FAB) */}
+      <button
+        onClick={() => setIsListening(true)}
+        className="fixed bottom-8 right-6 h-16 w-16 rounded-full bg-stone-800 text-white shadow-xl flex items-center justify-center hover:bg-stone-700 transition-colors"
+        aria-label="Open Voice Sanctuary"
+      >
+        <Mic size={24} />
+      </button>
+
+      {/* Sanctuary Overlay (Modal) */}
+      {isListening && (
+        <div
+          ref={overlayRef}
+          onClick={() => setIsListening(false)}
+          onKeyDown={(e) => {
+            if (e.key === "Escape") setIsListening(false);
+          }}
+          tabIndex={0}
+          className="fixed inset-0 backdrop-blur-md bg-stone-900/60 flex items-center justify-center cursor-pointer"
+          aria-label="Voice Sanctuary Overlay"
+          role="dialog"
+          aria-modal="true"
+        >
+          <div 
+            className="flex flex-col items-center gap-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Breathing Circle Animation */}
+            <div
+              className="h-32 w-32 rounded-full bg-white animate-pulse"
+              aria-hidden="true"
+            />
+            {/* Listening Text */}
+            <p className="text-white text-2xl font-light">I&apos;m listening...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
