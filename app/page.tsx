@@ -1,65 +1,115 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState } from "react";
+import { Play } from "lucide-react";
+
+type Dosage = "low" | "medium" | "high";
+
+interface TaskState {
+  title: string;
+  description: string;
+}
+
+const TASK_STATES: Record<Dosage, TaskState> = {
+  low: {
+    title: "Gentle Breathing",
+    description: "Take a moment to breathe deeply and center yourself. A calm start for low energy.",
+  },
+  medium: {
+    title: "Light Walk",
+    description: "A brief stroll to refresh your mind and body. Perfect for moderate energy levels.",
+  },
+  high: {
+    title: "Energizing Exercise",
+    description: "Time for an active session to channel your energy productively.",
+  },
+};
+
+export default function Dashboard() {
+  const [selectedDosage, setSelectedDosage] = useState<Dosage>("medium");
+  const currentTask = TASK_STATES[selectedDosage];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div className="min-h-screen bg-stone-100 flex flex-col items-center justify-center px-4 py-12">
+      {/* Header */}
+      <div className="mb-8 text-center">
+        <h1 className="text-2xl text-stone-800 font-medium">
+          Good evening. How is your energy?
+        </h1>
+      </div>
+
+      {/* Segmented Control */}
+      <div className="mb-12">
+        <div 
+          className="relative flex bg-stone-300/30 rounded-full p-1.5"
+          style={{
+            boxShadow: 'inset 0 1px 3px rgba(0, 0, 0, 0.1)',
+          }}
+        >
+          {/* Active indicator background */}
+          <div
+            className="absolute top-1.5 bottom-1.5 bg-white rounded-full shadow-sm transition-all duration-300 ease-out"
+            style={{
+              width: 'calc(33.333% - 6px)',
+              left: selectedDosage === "low" ? '6px' : selectedDosage === "medium" ? 'calc(33.333% + 2px)' : 'calc(66.666% - 2px)',
+            }}
+          />
+          
+          {/* Buttons */}
+          {(["low", "medium", "high"] as Dosage[]).map((dosage) => (
+            <button
+              key={dosage}
+              onClick={() => setSelectedDosage(dosage)}
+              className="relative z-10 px-8 py-2.5 text-sm font-medium transition-colors duration-300 capitalize"
+              style={{
+                color: selectedDosage === dosage ? '#1c1917' : '#78716c',
+              }}
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              {dosage}
+            </button>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+
+      {/* Hero Card */}
+      <div 
+        className="bg-white rounded-3xl shadow-sm p-8 w-full max-w-md transition-all duration-500 ease-in-out"
+        key={selectedDosage}
+        style={{
+          animation: 'fadeIn 0.5s ease-in-out',
+        }}
+      >
+        <div className="flex flex-col items-center text-center space-y-6">
+          {/* Play Button */}
+          <div className="w-20 h-20 bg-stone-100 rounded-full flex items-center justify-center hover:bg-stone-200 transition-colors cursor-pointer">
+            <Play className="w-10 h-10 text-stone-800 fill-stone-800" />
+          </div>
+
+          {/* Task Content */}
+          <div className="space-y-3">
+            <h2 className="text-2xl font-semibold text-stone-800">
+              {currentTask.title}
+            </h2>
+            <p className="text-stone-500 leading-relaxed">
+              {currentTask.description}
+            </p>
+          </div>
         </div>
-      </main>
+      </div>
+
+      {/* Animation keyframes */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
     </div>
   );
 }
