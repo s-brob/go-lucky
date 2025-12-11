@@ -1,11 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Mic } from "lucide-react";
 
 export default function Home() {
   const [isListening, setIsListening] = useState(false);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (isListening && overlayRef.current) {
+      overlayRef.current.focus();
+    }
+  }, [isListening]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
@@ -79,6 +86,7 @@ export default function Home() {
       {/* Sanctuary Overlay (Modal) */}
       {isListening && (
         <div
+          ref={overlayRef}
           onClick={() => setIsListening(false)}
           onKeyDown={(e) => {
             if (e.key === "Escape") setIsListening(false);
@@ -96,8 +104,7 @@ export default function Home() {
             {/* Breathing Circle Animation */}
             <div
               className="h-32 w-32 rounded-full bg-white"
-              role="img"
-              aria-label="Breathing animation indicating active listening"
+              aria-hidden="true"
               style={{
                 animation: "breathe 3s ease-in-out infinite"
               }}
