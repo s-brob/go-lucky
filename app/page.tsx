@@ -47,7 +47,7 @@ export default function Home() {
                   onChange={(e) => setDosage(Number(e.target.value))}
                   className="w-full h-2 bg-stone-200 rounded-full appearance-none cursor-pointer accent-stone-600"
                   style={{
-                    background: `linear-gradient(to right, rgb(87 83 78) 0%, rgb(87 83 78) ${dosage}%, rgb(231 229 228) ${dosage}%, rgb(231 229 228) 100%)`
+                    background: `linear-gradient(to right, #57534e 0%, #57534e ${dosage}%, #e7e5e4 ${dosage}%, #e7e5e4 100%)`
                   }}
                 />
                 <div className="flex justify-between mt-2 text-xs text-stone-500">
