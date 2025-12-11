@@ -1,6 +1,12 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import { Mic } from "lucide-react";
 
 export default function Home() {
+  const [isListening, setIsListening] = useState(false);
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
       <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
@@ -60,6 +66,50 @@ export default function Home() {
           </a>
         </div>
       </main>
+
+      {/* Floating Action Button (FAB) */}
+      <button
+        onClick={() => setIsListening(true)}
+        className="fixed bottom-8 right-6 h-16 w-16 rounded-full bg-stone-800 text-white shadow-xl flex items-center justify-center hover:bg-stone-700 transition-colors"
+        aria-label="Open Voice Sanctuary"
+      >
+        <Mic size={24} />
+      </button>
+
+      {/* Sanctuary Overlay (Modal) */}
+      {isListening && (
+        <div
+          onClick={() => setIsListening(false)}
+          className="fixed inset-0 backdrop-blur-md bg-stone-900/60 flex items-center justify-center cursor-pointer"
+          aria-label="Voice Sanctuary Overlay"
+        >
+          <div className="flex flex-col items-center gap-6">
+            {/* Breathing Circle Animation */}
+            <div
+              className="h-32 w-32 rounded-full bg-white"
+              style={{
+                animation: "breathe 3s ease-in-out infinite"
+              }}
+            />
+            {/* Listening Text */}
+            <p className="text-white text-2xl font-light">I&apos;m listening...</p>
+          </div>
+        </div>
+      )}
+
+      {/* Breathing Animation Keyframes */}
+      <style jsx>{`
+        @keyframes breathe {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 0.8;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   );
 }
