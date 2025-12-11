@@ -2,10 +2,12 @@
 
 import React, { useState } from "react";
 import { LayoutGrid, PieChart, BookOpen, Mic } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type TabType = 'today' | 'wheel' | 'library';
 
 export default function Home() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('today');
   const [dosage, setDosage] = useState(50);
   const [isRecording, setIsRecording] = useState(false);
@@ -70,6 +72,16 @@ export default function Home() {
                     style={{ width: `${dosage}%` }}
                   />
                 </div>
+              </div>
+
+              {/* Survey CTA */}
+              <div className="mt-6">
+                <button
+                  onClick={() => router.push('/survey')}
+                  className="w-full bg-stone-600 hover:bg-stone-700 text-white font-medium py-3 px-4 rounded-xl transition-colors duration-200"
+                >
+                  Take PERMA Survey
+                </button>
               </div>
             </>
           )}
