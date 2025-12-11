@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import "./styles.css";
 
 type Answer = number | null;
@@ -51,6 +52,7 @@ const SCALE = [0, 1, 2, 3, 4];
 const FLAT_ITEMS = PERMA_ITEMS.flatMap((d) => d.items.map((it) => ({ ...it, domain: d.domain })));
 
 export default function SurveyPage() {
+  const router = useRouter();
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, Answer>>(Object.fromEntries(FLAT_ITEMS.map((it) => [it.id, null])));
   const [submitted, setSubmitted] = useState(false);
@@ -163,6 +165,7 @@ export default function SurveyPage() {
               <div style={{marginTop:14}}>
                 <button className="ghost" onClick={() => { setSubmitted(false); setStep(0); }}>Review</button>
                 <button className="primary" onClick={() => alert(JSON.stringify({ totalScore, pct, domainScores }, null, 2))} style={{marginLeft:10}}>Export</button>
+                <button className="primary" onClick={() => router.push('/')} style={{marginLeft:10}}>Back to Home</button>
               </div>
             </div>
             <div className="detail-note">This prototype shows PERMA domains with paraphrased placeholders. Replace with licensed PERMA-Profiler items for production use.</div>

@@ -2,39 +2,48 @@
 
 import React, { useState } from "react";
 import { LayoutGrid, PieChart, BookOpen, Mic } from "lucide-react";
+import { useRouter } from "next/navigation";
+import "./styles.css";
 
 type TabType = 'today' | 'wheel' | 'library';
 
 export default function Home() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('today');
   const [dosage, setDosage] = useState(50);
   const [isRecording, setIsRecording] = useState(false);
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-stone-50 font-sans">
-      <div className="relative w-full max-w-md min-h-screen bg-white">
+    <div className="home-root">
+      <div className="spatial-scene" aria-hidden="true">
+        <div className="orb orb--a" />
+        <div className="orb orb--b" />
+        <div className="orb orb--c" />
+      </div>
+      
+      <div className="home-container">
         {/* Main Content Area with bottom padding */}
-        <main className="pb-24 px-6 pt-8">
+        <main className="home-main">
           {/* Conditional Rendering Based on Active Tab */}
           {activeTab === 'today' && (
             <>
               {/* Hero Card */}
-              <div className="mb-8">
-                <h1 className="text-2xl font-semibold text-stone-800 mb-2">
+              <div className="home-hero">
+                <h1 className="home-title">
                   Good Day
                 </h1>
-                <p className="text-stone-600 text-sm">
+                <p className="home-subtitle">
                   Track your wellbeing with intention
                 </p>
               </div>
 
               {/* Dosage Slider Card */}
-              <div className="bg-stone-50 rounded-2xl p-6 mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <label htmlFor="dosage" className="text-sm font-medium text-stone-700">
+              <div className="home-card">
+                <div className="dosage-header">
+                  <label htmlFor="dosage" className="dosage-label">
                     Today&apos;s Dosage
                   </label>
-                  <span className="text-2xl font-semibold text-stone-800">
+                  <span className="dosage-value">
                     {dosage}%
                   </span>
                 </div>
@@ -45,46 +54,56 @@ export default function Home() {
                   max="100"
                   value={dosage}
                   onChange={(e) => setDosage(Number(e.target.value))}
-                  className="w-full h-2 bg-stone-200 rounded-full appearance-none cursor-pointer accent-stone-600"
+                  className="dosage-slider"
                   style={{
-                    background: `linear-gradient(to right, #57534e 0%, #57534e ${dosage}%, #e7e5e4 ${dosage}%, #e7e5e4 100%)`
+                    background: `linear-gradient(to right, var(--accent) 0%, var(--accent) ${dosage}%, rgba(255,255,255,0.08) ${dosage}%, rgba(255,255,255,0.08) 100%)`
                   }}
                 />
-                <div className="flex justify-between mt-2 text-xs text-stone-500">
+                <div className="dosage-range">
                   <span>0%</span>
                   <span>100%</span>
                 </div>
               </div>
 
               {/* Hero Insight Card */}
-              <div className="bg-gradient-to-br from-stone-100 to-stone-50 rounded-2xl p-6 border border-stone-200">
-                <h2 className="text-lg font-medium text-stone-800 mb-2">
+              <div className="home-card progress-card">
+                <h2 className="card-title">
                   Your Progress
                 </h2>
-                <p className="text-stone-600 text-sm mb-4">
+                <p className="card-text">
                   You&apos;re maintaining a steady pace. Small, consistent steps lead to meaningful change.
                 </p>
-                <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
+                <div className="progress-bar-container">
                   <div 
-                    className="h-full bg-stone-600 rounded-full transition-all duration-300"
+                    className="progress-bar-fill"
                     style={{ width: `${dosage}%` }}
                   />
                 </div>
+              </div>
+
+              {/* Survey CTA */}
+              <div className="cta-container">
+                <button
+                  onClick={() => router.push('/survey')}
+                  className="primary"
+                >
+                  Take PERMA Survey
+                </button>
               </div>
             </>
           )}
 
           {activeTab === 'wheel' && (
-            <div className="flex items-center justify-center min-h-[60vh]">
-              <p className="text-stone-600 text-center text-lg">
+            <div className="tab-placeholder">
+              <p>
                 Your Wellbeing Wheel is generating...
               </p>
             </div>
           )}
 
           {activeTab === 'library' && (
-            <div className="flex items-center justify-center min-h-[60vh]">
-              <p className="text-stone-600 text-center text-lg">
+            <div className="tab-placeholder">
+              <p>
                 Your Saved Resources.
               </p>
             </div>
@@ -94,52 +113,46 @@ export default function Home() {
         {/* Voice Overlay - Floating Action Button */}
         <button
           onClick={() => setIsRecording(!isRecording)}
-          className="fixed bottom-28 right-6 w-14 h-14 bg-stone-600 hover:bg-stone-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all duration-200 z-10"
+          className="voice-button"
           aria-label="Voice input"
         >
-          <Mic className={`w-6 h-6 ${isRecording ? 'animate-pulse' : ''}`} />
+          <Mic className={`voice-icon ${isRecording ? 'recording' : ''}`} />
         </button>
 
         {/* Bottom Navigation Bar */}
-        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md bg-white/90 backdrop-blur border-t border-stone-100">
-          <div className="flex items-center justify-around px-6 py-4">
+        <nav className="home-nav">
+          <div className="nav-container">
             {/* Today Tab */}
             <button
               onClick={() => setActiveTab('today')}
-              className={`flex flex-col items-center gap-1 transition-colors ${
-                activeTab === 'today' ? 'text-stone-800' : 'text-stone-400'
-              }`}
+              className={`nav-button ${activeTab === 'today' ? 'active' : ''}`}
               aria-label="Today"
               aria-current={activeTab === 'today' ? 'page' : undefined}
             >
-              <LayoutGrid className="w-6 h-6" />
-              <span className="text-xs font-medium">Today</span>
+              <LayoutGrid className="nav-icon" />
+              <span className="nav-label">Today</span>
             </button>
 
             {/* My Wheel Tab */}
             <button
               onClick={() => setActiveTab('wheel')}
-              className={`flex flex-col items-center gap-1 transition-colors ${
-                activeTab === 'wheel' ? 'text-stone-800' : 'text-stone-400'
-              }`}
+              className={`nav-button ${activeTab === 'wheel' ? 'active' : ''}`}
               aria-label="My Wheel"
               aria-current={activeTab === 'wheel' ? 'page' : undefined}
             >
-              <PieChart className="w-6 h-6" />
-              <span className="text-xs font-medium">My Wheel</span>
+              <PieChart className="nav-icon" />
+              <span className="nav-label">My Wheel</span>
             </button>
 
             {/* Library Tab */}
             <button
               onClick={() => setActiveTab('library')}
-              className={`flex flex-col items-center gap-1 transition-colors ${
-                activeTab === 'library' ? 'text-stone-800' : 'text-stone-400'
-              }`}
+              className={`nav-button ${activeTab === 'library' ? 'active' : ''}`}
               aria-label="Library"
               aria-current={activeTab === 'library' ? 'page' : undefined}
             >
-              <BookOpen className="w-6 h-6" />
-              <span className="text-xs font-medium">Library</span>
+              <BookOpen className="nav-icon" />
+              <span className="nav-label">Library</span>
             </button>
           </div>
         </nav>
